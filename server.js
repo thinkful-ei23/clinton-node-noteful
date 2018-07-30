@@ -9,7 +9,7 @@ const app = express();
 console.log('hello world!');
 
 // INSERT EXPRESS APP CODE HERE...
-// app.use(express.static('public'));
+app.use(express.static('public'));
 
 // app.get('/', (req, res) => {
   
