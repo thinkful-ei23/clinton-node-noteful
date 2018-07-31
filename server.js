@@ -1,12 +1,13 @@
 'use strict';
 
 const express = require('express');
+const morgan = require('morgan');
 // Load array of notes
 const data = require('./db/notes');
 
 const app = express();
 
-console.log('Hello Noteful!');
+app.use(morgan('dev'));
 
 // INSERT EXPRESS APP CODE HERE...
 app.use(express.static('public'));
