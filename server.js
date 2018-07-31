@@ -25,18 +25,17 @@ app.get('/api/notes', (req, res, next) => {
     }
     res.json(list); // responds with filtered array
   });
-  // let filteredData = data;
-  // if (searchTerm) {
-  //   filteredData = filteredData.filter(item => JSON.stringify(item).includes(searchTerm));
-  // }
-  
-  // res.json(filteredData);
 });
 
 app.get('/api/notes/:id', (req, res) => {
-  const id = req.params.id;
-  const filteredData = data.find(item => item.id === Number(id));
-  res.json(filteredData);
+  const { id } = req.params;
+
+  notes.find(id, (err, item, next) => {
+    if (err) {
+      return next(err); // goes to error handler
+    }
+    res.json(item); // responds with filtered array
+  });
 });
 
 app.get('/boom', (req, res, next) => {
