@@ -1,17 +1,12 @@
 'use strict';
 
 const express = require('express');
+const router = express.Router();
+
 // Load array of notes
 const data = require('./db/notes');
 
-const app = express();
-
-const { PORT } = require('./config');
-
-// INSERT EXPRESS APP CODE HERE...
-app.use(express.static('public'));
-
-app.get('/api/notes', (req, res) => {
+router.get('/api/notes', (req, res) => {
   const searchTerm = req.query.searchTerm;
   let filteredData = data;
   if (searchTerm) {
@@ -21,14 +16,10 @@ app.get('/api/notes', (req, res) => {
   res.json(filteredData);
 });
 
-app.get('/api/notes/:id', (req, res) => {
+router.get('/api/notes/:id', (req, res) => {
   const id = req.params.id;
   const filteredData = data.find(item => item.id === Number(id));
   res.json(filteredData);
 });
 
-app.listen(PORT, function () {
-  console.info(`Server listening on ${this.address().port}`);
-}).on('error', err => {
-  console.error(err);
-});
+module.exports = router;
