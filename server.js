@@ -7,8 +7,11 @@ const data = require('./db/notes');
 const app = express();
 
 const { PORT } = require('./config');
+const { logger } = require('./middleware/logger');
 
 // INSERT EXPRESS APP CODE HERE...
+app.use(logger);
+
 app.use(express.static('public'));
 
 app.get('/api/notes', (req, res) => {
