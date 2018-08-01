@@ -1,7 +1,9 @@
 'use strict';
 
 function logger (req, res, next) {
-  console.log(new Date(), req.method, req.url);
+  const now = new Date();
+  console.log(
+    `${now.toLocaleDateString()} ${now.toLocaleTimeString()} ${req.method} ${req.url}`);
   next();
 }
 
