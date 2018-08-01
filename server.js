@@ -13,7 +13,6 @@ const { logger } = require('./middleware/logger');
 // Create an Express application
 const app = express();
 
-// INSERT EXPRESS APP CODE HERE...
 app.use(logger);
 
 // Create a static webserver
