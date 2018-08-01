@@ -8,7 +8,7 @@ const data = require('../db/notes');
 const simDB = require('../db/simDB');
 const notes = simDB.initialize(data);
 
-router.get('/api/notes', (req, res, next) => {
+router.get('/notes', (req, res, next) => {
   const { searchTerm } = req.query;
 
   notes.filter(searchTerm, (err, list) => {
@@ -19,7 +19,7 @@ router.get('/api/notes', (req, res, next) => {
   });
 });
 
-router.get('/api/notes/:id', (req, res) => {
+router.get('/notes/:id', (req, res) => {
   const { id } = req.params;
 
   notes.find(id, (err, item, next) => {
@@ -30,7 +30,7 @@ router.get('/api/notes/:id', (req, res) => {
   });
 });
 
-router.put('/api/notes/:id', (req, res, next) => {
+router.put('/notes/:id', (req, res, next) => {
   const id = req.params.id;
 
   /***** Never trust users - validate input *****/
@@ -56,7 +56,7 @@ router.put('/api/notes/:id', (req, res, next) => {
 });
 
 // Post (insert) an item
-router.post('/api/notes', (req, res, next) => {
+router.post('/notes', (req, res, next) => {
   const { title, content } = req.body;
 
   const newItem = { title, content };
@@ -79,16 +79,14 @@ router.post('/api/notes', (req, res, next) => {
   });
 });
 
-router.delete('/api/notes/:id', (req, res, next) => {
+router.delete('/notes/:id', (req, res, next) => {
   const id = req.params.id;
 
   notes.delete(id, err => {
     if (err) {
       return next(err);
-    } else {
-      res.status(204).send('No Content');
-      next();
     }
+    res.sendStatus(204);
   });
 });
 

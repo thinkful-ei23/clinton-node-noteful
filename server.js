@@ -2,15 +2,16 @@
 
 // Load Express into the file
 const express = require('express');
+const morgan = require('morgan');
 
 const { PORT } = require('./config');
 const { logger } = require('./middleware/logger');
-const itemsRouter = require('./router/notes.router');
+const notesRouter = require('./router/notes.router');
 
 // Create an Express application
 const app = express();
 
-app.use(logger);
+app.use(morgan('dev'));
 
 // Create a static webserver
 app.use(express.static('public'));
@@ -19,7 +20,7 @@ app.use(express.static('public'));
 // makes them available on `req.body`
 app.use(express.json());
 
-app.use(itemsRouter);
+app.use('/api', notesRouter);
 
 app.get('/boom', (req, res, next) => {
   throw new Error('Boom!!');
