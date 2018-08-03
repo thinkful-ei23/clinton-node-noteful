@@ -57,7 +57,7 @@ describe('Notes Database', function() {
     return closeServer();
   });
 
-  it('should return full list of 10 notes', function() {
+  it('should return full list of 10 default notes', function() {
     return chai
       .request(app)
       .get('/api/notes')
@@ -93,7 +93,7 @@ describe('Notes Database', function() {
       });
   });
 
-  it('should return empty array for an incorrect query', function() {
+  it('should return empty array for an invalid query', function() {
     const searchTerm = 'dogs';
     return chai
       .request(app)
@@ -103,6 +103,31 @@ describe('Notes Database', function() {
         expect(res).to.be.json;
         expect(res.body).to.be.a('array');
         expect(res.body.length).to.equal(0);
+      });
+  });
+
+  it('should return correct note object', function() {
+    let id;
+    let title;
+    let content;
+    return chai
+      .request(app)
+      .get('/api/notes')
+      .then(function(res) {
+        id = res.body[0].id;
+        title = res.body[0].title;
+        content = res.body[0].content;
+        return chai
+          .request(app)
+          .get(`/api/notes/${id}`);
+      })
+      .then(function(res) {
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body).to.be.a('object');
+        expect(res.body.id).to.equal(id);
+        expect(res.body.title).to.equal(title);
+        expect(res.body.content).to.equal(content);
       });
   });
 
