@@ -1,6 +1,6 @@
 'use strict';
 
-const app = require('../server');
+const { app, runServer, closeServer } = require('../server');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 
@@ -41,6 +41,37 @@ describe('404 handler', function() {
       .get('/DOES/NOT/EXIST')
       .then(function(res) {
         expect(res).to.have.status(404);
+      });
+  });
+
+});
+
+
+describe('/api/notes', function() {
+
+  before(function() {
+    return runServer();
+  });
+
+  after(function() {
+    return closeServer();
+  });
+
+  it('should list notes on GET', function() {
+    return chai
+      .request(app)
+      .get('/api/notes')
+      .then(function(res) {
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body).to.be.a('array');
+        expect(res.body.length).to.equal(10);
+
+        const expectedKeys = ['id', 'title', 'content'];
+        res.body.forEach(function(note) {
+          expect(note).to.be.a('object');
+          expect(note).to.include.keys(expectedKeys);
+        });
       });
   });
 
