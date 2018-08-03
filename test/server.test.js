@@ -131,4 +131,16 @@ describe('Notes Database', function() {
       });
   });
 
+  it('should respond with a 404 for an invalid id', function() {
+    return chai
+      .request(app)
+      .get('/api/notes/DOESNOTEXIST')
+      .then(function(res) {
+        expect(res).to.have.status(404);
+        expect(res.body).to.be.a('object');
+        expect(res.body).to.include.keys('message');
+        expect(res.body.message).to.equal('Not Found');
+      });
+  });
+
 });
