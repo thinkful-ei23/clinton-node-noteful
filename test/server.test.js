@@ -162,4 +162,20 @@ describe('Notes Database', function() {
       });
   });
 
+  it('should return an object with `missing title` message', function() {
+    const newNote = { title: '', content: 'uh-oh, no title!' };
+    return chai
+      .request(app)
+      .post('/api/notes')
+      .send(newNote)
+      .then(function(res) {
+        expect(res).to.have.status(400);
+        expect(res).to.be.json;
+        expect(res.body).to.be.a('object');
+        expect(res.body).to.include.keys('message', 'error');
+        expect(res.body.message).to.equal('Missing `title` in request body');
+        expect(res.body.error.status).to.equal(400);
+      });
+  });
+
 });
