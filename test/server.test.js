@@ -178,4 +178,28 @@ describe('Notes Database', function() {
       });
   });
 
+  it('should update and return a note object', function() {
+    const updateData = {
+      title: 'dog note',
+      content: 'stuff about dogs'
+    };
+
+    return chai
+      .request(app)
+      .get('/api/notes')
+      .then(function(res) {
+        updateData.id = res.body[0].id;
+        return chai
+          .request(app)
+          .put(`/api/notes/${updateData.id}`)
+          .send(updateData);
+      })
+      .then(function(res) {
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body).to.be.a('object');
+        expect(res.body).to.deep.equal(updateData);
+      });
+  });
+
 });
