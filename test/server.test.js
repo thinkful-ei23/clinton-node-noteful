@@ -143,4 +143,23 @@ describe('Notes Database', function() {
       });
   });
 
+  it('should create and return a new item with location header when provided valid data', function() {
+    const newNote = { title: 'dogs are cool', content: 'stuff about dogs' };
+    return chai
+      .request(app)
+      .post('/api/notes')
+      .send(newNote)
+      .then(function(res) {
+        expect(res).to.have.status(201);
+        expect(res).to.be.json;
+        expect(res.body).to.be.a('object');
+        expect(res.body).to.include.keys('id', 'title', 'content');
+        expect(res.body.id).to.not.equal(null);
+        expect(res.body).to.deep.equal(
+          Object.assign(newNote, { id: res.body.id })
+        );
+        expect(res.headers.location).to.include(res.body.id);
+      });
+  });
+
 });
