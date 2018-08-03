@@ -47,7 +47,7 @@ describe('404 handler', function() {
 });
 
 
-describe('/api/notes', function() {
+describe('Notes Database', function() {
 
   before(function() {
     return runServer();
@@ -57,7 +57,7 @@ describe('/api/notes', function() {
     return closeServer();
   });
 
-  it('should list notes on GET', function() {
+  it('should return full list of 10 notes', function() {
     return chai
       .request(app)
       .get('/api/notes')
@@ -75,18 +75,6 @@ describe('/api/notes', function() {
       });
   });
 
-});
-
-describe('/api/notes', function() {
-
-  before(function() {
-    return runServer();
-  });
-
-  after(function() {
-    return closeServer();
-  });
-
   it('should return correct search results for a valid query', function() {
     const searchTerm = 'government';
     return chai
@@ -102,6 +90,19 @@ describe('/api/notes', function() {
           expect(note).to.have.all.keys('id', 'title', 'content');
           expect(note.title).to.include(searchTerm);
         });
+      });
+  });
+
+  it('should return empty array for an incorrect query', function() {
+    const searchTerm = 'dogs';
+    return chai
+      .request(app)
+      .get(`/api/notes/?searchTerm=${searchTerm}`)
+      .then(function(res) {
+        expect(res).to.have.status(200);
+        expect(res).to.be.json;
+        expect(res.body).to.be.a('array');
+        expect(res.body.length).to.equal(0);
       });
   });
 
