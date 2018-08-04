@@ -1,16 +1,15 @@
 'use strict';
 
-// Load Express into the file
+// Load Express, Morgan, Config, and Router into the file
 const express = require('express');
 const morgan = require('morgan');
-
 const { PORT } = require('./config');
-const { logger } = require('./middleware/logger');
 const notesRouter = require('./router/notes.router');
 
 // Create an Express application
 const app = express();
 
+// Log all requests with Morgan
 app.use(morgan('dev'));
 
 // Create a static webserver
@@ -20,18 +19,17 @@ app.use(express.static('public'));
 // makes them available on `req.body`
 app.use(express.json());
 
+// Route all requests to `/api` through the router
 app.use('/api', notesRouter);
 
-app.get('/boom', (req, res, next) => {
-  throw new Error('Boom!!');
-});
-
+// Set default 404 error
 app.use(function (req, res, next) {
   let err = new Error('Not Found');
   err.status = 404;
   res.status(404).json({ message: 'Not Found' });
 });
 
+//
 app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.json({
@@ -43,11 +41,10 @@ app.use(function (err, req, res, next) {
 let server;
 
 function runServer() {
-  const port = process.env.PORT || 8080;
   return new Promise((resolve, reject) => {
     server = app
-      .listen(port, () => {
-        console.log(`Your app is listening on port ${port}`);
+      .listen(PORT, () => {
+        console.log(`Your app is listening on port ${PORT}`);
         resolve(server);
       })
       .on('error', err => {
